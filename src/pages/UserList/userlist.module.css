@@ -1,0 +1,447 @@
+:root {
+    --background-color: #ffffff;
+    --text-color: #1a1a1a;
+    --card-background: #f8f9fa;
+    --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    --button-background: #007bff;
+    --button-text: #ffffff;
+    --button-hover: #0056b3;
+    --button-disabled: #d1d5db;
+    --error-color: #dc3545;
+    --border-color: #e5e7eb;
+    --ban-button-background: #dc3545;
+    --ban-button-hover: #b02a37;
+    --modal-background: #ffffff;
+    --modal-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    --transition: all 0.3s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #121212;
+        --text-color: #e5e5e5;
+        --card-background: #1e1e1e;
+        --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        --button-background: #ffffff;
+        --button-text: #121212;
+        --button-hover: #e0e0e0;
+        --button-disabled: #4b5563;
+        --error-color: #ff6b6b;
+        --border-color: #374151;
+        --ban-button-background: #ff6b6b;
+        --ban-button-hover: #e55a5a;
+        --modal-background: #1e1e1e;
+        --modal-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    width: calc(100vw - 380px);
+    margin: 0 auto;
+    min-height: 100vh;
+    overflow-y: auto;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+.loading,
+.error,
+.noData {
+    text-align: center;
+    font-size: 1.125rem;
+    margin: 24px 0;
+    font-weight: 500;
+}
+
+.error {
+    color: var(--error-color);
+}
+
+.userGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+.userCard {
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    background-color: var(--card-background);
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+}
+
+.userCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.userCard h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.userCard p {
+    font-size: 0.875rem;
+    margin: 4px 0;
+    color: var(--text-color);
+    opacity: 0.85;
+}
+
+.profilePicture {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 12px;
+    border: 3px solid var(--button-background);
+    transition: var(--transition);
+}
+
+.banButton {
+    margin-top: 8px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: var(--ban-button-background);
+    color: #ffffff;
+    transition: var(--transition);
+}
+
+.banButton:hover:not(:disabled) {
+    background-color: var(--ban-button-hover);
+}
+
+.banButton:disabled {
+    background-color: var(--button-disabled);
+    cursor: not-allowed;
+}
+
+.banButton:focus {
+    outline: 2px solid var(--ban-button-background);
+    outline-offset: 2px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: var(--modal-background);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: var(--modal-shadow);
+    max-width: 500px;
+    width: 90%;
+    color: var(--text-color);
+}
+
+.modalContent h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+}
+
+.modalContent label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.banReasonInput {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--card-background);
+    color: var(--text-color);
+    font-size: 0.875rem;
+    min-height: 80px;
+    resize: vertical;
+}
+
+.banReasonInput:focus {
+    outline: 2px solid var(--button-background);
+    outline-offset: 1px;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.confirmButton,
+.cancelButton {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.confirmButton {
+    background-color: var(--ban-button-background);
+    color: #ffffff;
+}
+
+.confirmButton:hover:not(:disabled) {
+    background-color: var(--ban-button-hover);
+}
+
+.confirmButton:disabled {
+    background-color: var(--button-disabled);
+    cursor: not-allowed;
+}
+
+.cancelButton {
+    background-color: var(--button-background);
+    color: var(--button-text);
+}
+
+.cancelButton:hover {
+    background-color: var(--button-hover);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.pageButton {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: var(--button-background);
+    color: var(--button-text);
+    transition: var(--transition);
+}
+
+.pageButton:hover:not(:disabled) {
+    background-color: var(--button-hover);
+}
+
+.pageButton:disabled {
+    background-color: var(--button-disabled);
+    cursor: not-allowed;
+}
+
+.pageButton:focus {
+    outline: 2px solid var(--button-background);
+    outline-offset: 2px;
+}
+
+@media screen and (min-width: 900px) {
+    .container {
+        padding: 32px;
+    }
+
+    .userGrid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 28px;
+    }
+
+    .userCard {
+        padding: 20px;
+    }
+
+    .profilePicture {
+        width: 100px;
+        height: 100px;
+    }
+
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .modalContent {
+        max-width: 600px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+
+        .userCard,
+        .modalContent {
+            border-color: var(--border-color);
+        }
+
+        .banButton:hover:not(:disabled),
+        .confirmButton:hover:not(:disabled) {
+            background-color: var(--ban-button-hover);
+        }
+    }
+}
+
+@media screen and (max-width: 900px) and (min-width: 520px) {
+    .container {
+        padding: 20px;
+        width: calc(100vw - 40px);
+    }
+
+    .userGrid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .userCard {
+        padding: 14px;
+    }
+
+    .profilePicture {
+        width: 88px;
+        height: 88px;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    .pageButton,
+    .banButton,
+    .confirmButton,
+    .cancelButton {
+        padding: 8px 16px;
+        font-size: 0.875rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+
+        .userCard,
+        .modalContent {
+            box-shadow: var(--card-shadow);
+            border-color: var(--border-color);
+        }
+
+        .pageButton,
+        .cancelButton {
+            background-color: var(--button-background);
+            color: var(--button-text);
+        }
+    }
+}
+
+@media screen and (max-width: 520px) {
+    .container {
+        padding: 16px;
+        width: calc(100vw - 20px);
+    }
+
+    .userGrid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .userCard {
+        padding: 12px;
+    }
+
+    .profilePicture {
+        width: 80px;
+        height: 80px;
+        border-width: 2px;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .header h1 {
+        font-size: 1.25rem;
+    }
+
+    .loading,
+    .error,
+    .noData {
+        font-size: 1rem;
+    }
+
+    .pagination {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .pageButton,
+    .banButton,
+    .confirmButton,
+    .cancelButton {
+        padding: 8px 14px;
+        font-size: 0.75rem;
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .modalContent {
+        padding: 16px;
+        width: 95%;
+    }
+
+    .modalContent h2 {
+        font-size: 1.25rem;
+    }
+
+    .banReasonInput {
+        font-size: 0.75rem;
+        min-height: 60px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+
+        .userCard,
+        .modalContent {
+            border-color: var(--border-color);
+        }
+
+        .pageButton:disabled,
+        .banButton:disabled,
+        .confirmButton:disabled {
+            background-color: var(--button-disabled);
+        }
+    }
+}
