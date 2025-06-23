@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./userlist.module.css";
 import type { AppDispatch, RootState } from "../../redux/store";
-import { banUser, clearBanError, fetchUsers } from "../../redux/userSlice";
+import {
+  banUser,
+  unbanUser,
+  clearBanError,
+  fetchUsers,
+} from "../../redux/userSlice";
 
 interface User {
   id: string;
@@ -46,6 +51,10 @@ const UsersList: React.FC = () => {
     setBanReason("");
   };
 
+  const handleUnbanClick = (userId: string) => {
+    dispatch(unbanUser(userId));
+  };
+
   const handleBanConfirm = () => {
     if (banPrompt && banReason.trim()) {
       dispatch(banUser({ userId: banPrompt.userId, reason: banReason.trim() }));
@@ -84,14 +93,6 @@ const UsersList: React.FC = () => {
           <div className={styles.userGrid}>
             {users.map((user: User) => (
               <div key={user.id} className={styles.userCard}>
-                {/* <img
-                  src={user.profilePicture || "https://via.placeholder.com/150"}
-                  alt={user.username}
-                  className={styles.profilePicture}
-                  onError={(e) => {
-                    e.currentTarget.src = "https://via.placeholder.com/150";
-                  }}
-                /> */}
                 <h3>{user.username}</h3>
                 <p>Email: {user.email}</p>
                 <p>Name: {user.fullName || "N/A"}</p>
@@ -99,17 +100,29 @@ const UsersList: React.FC = () => {
                 <p>Following: {user.followingCount}</p>
                 <p>Status: {user.isBanned ? "Banned" : "Active"}</p>
                 {user.isBanned && <p>Reason: {user.banReason || "N/A"}</p>}
-                {!user.isBanned && (
-                  <button
-                    className={styles.banButton}
-                    onClick={() => handleBanClick(user.id, user.username)}
-                    disabled={banStatus[user.id] === "loading"}
-                  >
-                    {banStatus[user.id] === "loading"
-                      ? "Banning..."
-                      : "Ban User"}
-                  </button>
-                )}
+                <div className={styles.userActions}>
+                  {!user.isBanned ? (
+                    <button
+                      className={styles.banButton}
+                      onClick={() => handleBanClick(user.id, user.username)}
+                      disabled={banStatus[user.id] === "loading"}
+                    >
+                      {banStatus[user.id] === "loading"
+                        ? "Banning..."
+                        : "Ban User"}
+                    </button>
+                  ) : (
+                    <button
+                      className={styles.unbanButton}
+                      onClick={() => handleUnbanClick(user.id)}
+                      disabled={banStatus[user.id] === "loading"}
+                    >
+                      {banStatus[user.id] === "loading"
+                        ? "Unbanning..."
+                        : "Unban User"}
+                    </button>
+                  )}
+                </div>
                 {banError[user.id] && (
                   <p className={styles.error}>{banError[user.id]}</p>
                 )}

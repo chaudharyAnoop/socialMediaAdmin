@@ -11,6 +11,8 @@
     --border-color: #e5e7eb;
     --ban-button-background: #dc3545;
     --ban-button-hover: #b02a37;
+    --unban-button-background: #28a745;
+    --unban-button-hover: #218838;
     --modal-background: #ffffff;
     --modal-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     --transition: all 0.3s ease;
@@ -30,6 +32,8 @@
         --border-color: #374151;
         --ban-button-background: #ff6b6b;
         --ban-button-hover: #e55a5a;
+        --unban-button-background: #38c172;
+        --unban-button-hover: #2f9e5e;
         --modal-background: #1e1e1e;
         --modal-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
@@ -107,39 +111,51 @@
     opacity: 0.85;
 }
 
-.profilePicture {
-    width: 96px;
-    height: 96px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 12px;
-    border: 3px solid var(--button-background);
-    transition: var(--transition);
+.userActions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    align-items: center;
 }
 
-.banButton {
-    margin-top: 8px;
+.banButton,
+.unbanButton {
     padding: 6px 12px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    background-color: var(--ban-button-background);
     color: #ffffff;
     transition: var(--transition);
+    width: 120px;
+}
+
+.banButton {
+    background-color: var(--ban-button-background);
 }
 
 .banButton:hover:not(:disabled) {
     background-color: var(--ban-button-hover);
 }
 
-.banButton:disabled {
+.unbanButton {
+    background-color: var(--unban-button-background);
+}
+
+.unbanButton:hover:not(:disabled) {
+    background-color: var(--unban-button-hover);
+}
+
+.banButton:disabled,
+.unbanButton:disabled {
     background-color: var(--button-disabled);
     cursor: not-allowed;
 }
 
-.banButton:focus {
+.banButton:focus,
+.unbanButton:focus {
     outline: 2px solid var(--ban-button-background);
     outline-offset: 2px;
 }
@@ -284,11 +300,6 @@
         padding: 20px;
     }
 
-    .profilePicture {
-        width: 100px;
-        height: 100px;
-    }
-
     .header h1 {
         font-size: 2rem;
     }
@@ -305,8 +316,13 @@
         }
 
         .banButton:hover:not(:disabled),
+        .unbanButton:hover:not(:disabled),
         .confirmButton:hover:not(:disabled) {
             background-color: var(--ban-button-hover);
+        }
+
+        .unbanButton:hover:not(:disabled) {
+            background-color: var(--unban-button-hover);
         }
     }
 }
@@ -326,11 +342,6 @@
         padding: 14px;
     }
 
-    .profilePicture {
-        width: 88px;
-        height: 88px;
-    }
-
     .header {
         flex-direction: column;
         gap: 12px;
@@ -343,6 +354,7 @@
 
     .pageButton,
     .banButton,
+    .unbanButton,
     .confirmButton,
     .cancelButton {
         padding: 8px 16px;
@@ -367,68 +379,116 @@
 
 @media screen and (max-width: 520px) {
     .container {
-        padding: 16px;
-        width: calc(100vw - 20px);
+        padding: 12px;
+        width: calc(100vw - 16px);
+        gap: 12px;
     }
 
     .userGrid {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 12px;
     }
 
     .userCard {
         padding: 12px;
+        border-radius: 8px;
     }
 
-    .profilePicture {
-        width: 80px;
-        height: 80px;
-        border-width: 2px;
+    .userCard h3 {
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+    }
+
+    .userCard p {
+        font-size: 0.8rem;
+        margin: 3px 0;
+    }
+
+    .userActions {
+        gap: 6px;
+        margin-top: 6px;
+    }
+
+    .banButton,
+    .unbanButton {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        width: 140px;
+        max-width: 80%;
     }
 
     .header {
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
         text-align: center;
+        margin-bottom: 16px;
     }
 
     .header h1 {
-        font-size: 1.25rem;
+        font-size: 1.2rem;
     }
 
     .loading,
     .error,
     .noData {
-        font-size: 1rem;
+        font-size: 0.9rem;
+        margin: 16px 0;
     }
 
     .pagination {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
         gap: 8px;
+        margin-top: 16px;
     }
 
-    .pageButton,
-    .banButton,
-    .confirmButton,
-    .cancelButton {
-        padding: 8px 14px;
-        font-size: 0.75rem;
-        width: 100%;
-        max-width: 200px;
+    .pageButton {
+        padding: 6px 16px;
+        font-size: 0.8rem;
+        width: 90px;
+        text-align: center;
+    }
+
+    .modal {
+        padding: 8px;
     }
 
     .modalContent {
         padding: 16px;
+        border-radius: 8px;
         width: 95%;
+        max-width: 400px;
     }
 
     .modalContent h2 {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+
+    .modalContent label {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
     }
 
     .banReasonInput {
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         min-height: 60px;
+        padding: 6px;
+        border-radius: 4px;
+    }
+
+    .modalActions {
+        justify-content: center;
+        gap: 8px;
+        margin-top: 12px;
+    }
+
+    .confirmButton,
+    .cancelButton {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        width: 120px;
+        text-align: center;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -440,6 +500,7 @@
 
         .pageButton:disabled,
         .banButton:disabled,
+        .unbanButton:disabled,
         .confirmButton:disabled {
             background-color: var(--button-disabled);
         }

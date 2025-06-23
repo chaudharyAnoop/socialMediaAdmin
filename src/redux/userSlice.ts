@@ -1,81 +1,6 @@
-// import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-// import axios from "axios";
-
-// interface User {
-//   id: string;
-//   email: string;
-//   username: string;
-//   fullName?: string;
-//   bio: string;
-//   accountType: string;
-//   profilePicture: string;
-//   followersCount: number;
-//   followingCount: number;
-//   followers?: string[];
-//   following?: string[];
-//   isBanned: boolean;
-//   banReason: string;
-// }
-
-// interface UsersState {
-//   users: User[];
-//   totalCount: number;
-//   status: "idle" | "loading" | "succeeded" | "failed";
-//   error: string | null;
-// }
-
-// const initialState: UsersState = {
-//   users: [],
-//   totalCount: 0,
-//   status: "idle",
-//   error: null,
-// };
-
-// const token =
-//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRmYmRlN2U4Y2NhNGJlNGM4ZDI3MDkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiZGV2aWNlSWQiOiJUZXN0SWQiLCJpcEFkZHJlc3MiOiI6OmZmZmY6MTcyLjUwLjUuMTE0IiwidXNlckFnZW50IjoiZ2giLCJpYXQiOjE3NTA2NTQ2MjgsImV4cCI6MTc1MDY1NzYyOCwic3ViIjoiNjg0ZmJkZTdlOGNjYTRiZTRjOGQyNzA5In0.mKt27jZt_uvknZrA6dhG5dcIRAqoMByjb3LF-Itw2QA";
-
-// export const fetchUsers = createAsyncThunk(
-//   "users/fetchUsers",
-//   async ({ limit = 10, page = 1 }: { limit?: number; page?: number }) => {
-//     const response = await axios.get(
-//       "http://172.50.3.106:3002/admin/AllUsers",
-//       {
-//         params: { limit, page },
-//         headers: {
-//           Accept: "*/*",
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }
-//     );
-//     return response.data;
-//   }
-// );
-
-// const usersSlice = createSlice({
-//   name: "users",
-//   initialState,
-//   reducers: {},
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(fetchUsers.pending, (state) => {
-//         state.status = "loading";
-//       })
-//       .addCase(fetchUsers.fulfilled, (state, action) => {
-//         state.status = "succeeded";
-//         state.users = action.payload.users;
-//         state.totalCount = action.payload.totalCount;
-//       })
-//       .addCase(fetchUsers.rejected, (state, action) => {
-//         state.status = "failed";
-//         state.error = action.error.message || "Failed to fetch users";
-//       });
-//   },
-// });
-
-// export default usersSlice.reducer;
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import token from "./tokens";
 
 interface User {
   id: string;
@@ -110,9 +35,6 @@ const initialState: UsersState = {
   error: null,
   banError: {},
 };
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRmYmRlN2U4Y2NhNGJlNGM4ZDI3MDkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiZGV2aWNlSWQiOiJUZXN0SWQiLCJpcEFkZHJlc3MiOiI6OmZmZmY6MTcyLjUwLjUuMTE0IiwidXNlckFnZW50IjoiZ2giLCJpYXQiOjE3NTA2NTQ2MjgsImV4cCI6MTc1MDY1NzYyOCwic3ViIjoiNjg0ZmJkZTdlOGNjYTRiZTRjOGQyNzA5In0.mKt27jZt_uvknZrA6dhG5dcIRAqoMByjb3LF-Itw2QA";
 
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
@@ -169,6 +91,30 @@ export const banUser = createAsyncThunk(
   }
 );
 
+export const unbanUser = createAsyncThunk(
+  "users/unbanUser",
+  async (userId: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `http://172.50.3.106:3002/admin/unban-user/${userId}`,
+        {},
+        {
+          headers: {
+            Accept: "*/*",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status !== 201) {
+        throw new Error("Failed to unban user");
+      }
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to unban user");
+    }
+  }
+);
+
 const usersSlice = createSlice({
   name: "users",
   initialState,
@@ -215,6 +161,29 @@ const usersSlice = createSlice({
         state.banStatus[action.meta.arg.userId] = "failed";
         state.banError[action.meta.arg.userId] =
           (action.payload as string) || "Failed to ban user";
+      })
+      .addCase(unbanUser.pending, (state, action) => {
+        state.banStatus[action.meta.arg] = "loading";
+        state.banError[action.meta.arg] = null;
+      })
+      .addCase(unbanUser.fulfilled, (state, action) => {
+        state.banStatus[action.meta.arg] = "idle";
+        const unbannedUser = action.payload;
+        const index = state.users.findIndex(
+          (user) => user.id === unbannedUser.id
+        );
+        if (index !== -1) {
+          state.users[index] = {
+            ...state.users[index],
+            isBanned: unbannedUser.isBanned,
+            banReason: unbannedUser.banReason,
+          };
+        }
+      })
+      .addCase(unbanUser.rejected, (state, action) => {
+        state.banStatus[action.meta.arg] = "failed";
+        state.banError[action.meta.arg] =
+          (action.payload as string) || "Failed to unban user";
       });
   },
 });

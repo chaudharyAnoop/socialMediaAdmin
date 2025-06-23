@@ -32,7 +32,7 @@ import { CgLogOut } from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../redux/store";
 import { toggleNavigationBar } from "../../redux/navigationBarSlice";
-import { Home, MessageCircle } from "lucide-react";
+import { Home, Image, MessageCircle, User } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -75,15 +75,15 @@ function NavigationBar() {
             <NavLink to="/" className={styles.link}>
               <div className={styles.tile}>
                 <div className={styles.name}>
-                  <Home className={styles.icon} />
-                  <p className={styles.head}> Home</p>
+                  <User className={styles.icon} />
+                  <p className={styles.head}>Users</p>
                 </div>
                 <p className={styles.val}>new post</p>
               </div>
             </NavLink>
           </li>
           <li className={styles.list_li}>
-            <NavLink to="/explore" className={styles.link}>
+            <NavLink to="/usersearch  " className={styles.link}>
               <div className={styles.tile}>
                 <div className={styles.name}>
                   <FaSearch className={styles.icon} />
@@ -105,17 +105,17 @@ function NavigationBar() {
             </NavLink>
           </li>{" "} */}
           <li className={styles.list_li}>
-            <NavLink to="/create" className={styles.link}>
+            <NavLink to="/allposts" className={styles.link}>
               <div className={styles.tile}>
                 <div className={styles.name}>
-                  <FaPlus className={styles.icon} />
-                  <p className={styles.head}> Create Post</p>
+                  <Image className={styles.icon} />
+                  <p className={styles.head}> All Post</p>
                 </div>
                 <p className={styles.val}>25</p>
               </div>
             </NavLink>
           </li>{" "}
-          <li className={styles.list_li}>
+          {/* <li className={styles.list_li}>
             <NavLink to="/chat" className={styles.link}>
               <div className={styles.tile}>
                 <div className={styles.name}>
@@ -125,8 +125,8 @@ function NavigationBar() {
                 <p className={styles.val}>25</p>
               </div>
             </NavLink>
-          </li>{" "}
-          <li className={styles.list_li}>
+          </li>{" "} */}
+          {/* <li className={styles.list_li}>
             <NavLink to="/noti" className={styles.link}>
               <div className={styles.tile}>
                 <div className={styles.name}>
@@ -136,8 +136,8 @@ function NavigationBar() {
                 <p className={styles.val}>5 not..</p>
               </div>
             </NavLink>
-          </li>{" "}
-          <li className={styles.list_li}>
+          </li>{" "} */}
+          {/* <li className={styles.list_li}>
             <NavLink to="/" className={styles.link}>
               <div className={styles.tile}>
                 <div className={styles.name}>
@@ -147,29 +147,7 @@ function NavigationBar() {
                 <p className={styles.val}>99+</p>
               </div>
             </NavLink>
-          </li>
-          <li className={styles.list_li}>
-            <NavLink to="/" className={styles.link}>
-              <div className={styles.tile}>
-                <div className={styles.name}>
-                  <FaRegUser className={styles.icon} />
-                  <p className={styles.head}> Profile</p>
-                </div>
-                {/* <p className={styles.val}>10</p> */}
-              </div>
-            </NavLink>
-          </li>
-          <li className={styles.list_li}>
-            <NavLink to="/" className={styles.link} onClick={logoutHnadler}>
-              <div className={styles.tile}>
-                <div className={styles.name}>
-                  <CgLogOut className={styles.icon} />
-                  <p className={styles.head}> Logout</p>
-                </div>
-                {/* <p className={styles.val}>10</p> */}
-              </div>
-            </NavLink>
-          </li>
+          </li> */}
         </ul>
         <div className={styles.space}></div>
         <div className={styles.bottom}>
