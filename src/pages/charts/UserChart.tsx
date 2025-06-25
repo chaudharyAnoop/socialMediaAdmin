@@ -1,12 +1,8 @@
 import {
   BarChart,
   Bar,
-  LineChart,
-  Line,
   PieChart,
   Pie,
-  AreaChart,
-  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -16,7 +12,12 @@ import {
 } from "recharts";
 import styles from "./charts.module.css";
 
-export default function UserChart({ activeUsers, blockedUsers }) {
+interface ChartData {
+  activeUsers: number;
+  blockedUsers: number;
+}
+
+export default function UserChart({ activeUsers, blockedUsers }: ChartData) {
   const pieData = [
     { name: "Followers", value: activeUsers },
     { name: "Following", value: blockedUsers },

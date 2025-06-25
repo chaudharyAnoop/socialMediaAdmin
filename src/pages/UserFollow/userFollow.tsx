@@ -14,7 +14,7 @@ const UserFollow: React.FC = () => {
   const { followers, following, loading, error } = useSelector(
     (state: RootState) => state.follow
   );
-  const [userId, setUserId] = useState<string>("68457afff8aa8e4224e1d28b");
+  const [userId, setUserId] = useState<string>("684803c50574c4ee41ed21a8");
   const [token, setToken] = useState<string>("");
 
   useEffect(() => {

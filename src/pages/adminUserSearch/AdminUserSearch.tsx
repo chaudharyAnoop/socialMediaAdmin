@@ -83,8 +83,8 @@ const AdminUserSearch: React.FC = () => {
         </div>
       )}
       <UserChart
-        activeUsers={user?.followersCount}
-        blockedUsers={user?.followingCount}
+        activeUsers={Number(user?.followersCount)}
+        blockedUsers={Number(user?.followersCount)}
       />
     </div>
   );
