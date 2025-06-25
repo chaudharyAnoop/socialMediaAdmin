@@ -7,6 +7,7 @@ import {
   fetchFollowers,
   fetchFollowing,
 } from "../../redux/userFollowSlice";
+import UserChart from "../charts/UserChart";
 
 const UserFollow: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -79,6 +80,12 @@ const UserFollow: React.FC = () => {
       <div className={styles.results}>
         <p>Followers: {followers.totalCount}</p>
         <p>Following: {following.totalCount}</p>
+      </div>
+      <div className={styles.chart}>
+        <UserChart
+          activeUsers={followers.totalCount > 0 ? followers.totalCount : 10}
+          blockedUsers={following.totalCount > 0 ? following.totalCount : 5}
+        />
       </div>
     </div>
   );
