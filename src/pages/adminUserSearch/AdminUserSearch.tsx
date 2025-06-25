@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./AdminUserSearch.module.css";
 import type { AppDispatch, RootState } from "../../redux/store";
 import { findUserByEmail, resetUserSearch } from "../../redux/userSearchSlice";
+import UserChart from "../charts/UserChart";
 
 const AdminUserSearch: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -81,6 +82,10 @@ const AdminUserSearch: React.FC = () => {
           </p>
         </div>
       )}
+      <UserChart
+        activeUsers={user?.followersCount}
+        blockedUsers={user?.followingCount}
+      />
     </div>
   );
 };
