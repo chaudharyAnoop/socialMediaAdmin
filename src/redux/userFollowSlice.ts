@@ -47,7 +47,7 @@ export const fetchFollowers = createAsyncThunk(
 
 export const fetchFollowing = createAsyncThunk(
   "follow/fetchFollowing",
-  async ({ userId, token }: FetchFollowParams, { rejectWithValue }) => {
+  async ({ userId }: FetchFollowParams, { rejectWithValue }) => {
     try {
       const response = await axios.get(
         `${BASE_URL}/admin/following/${userId}`,
