@@ -1,4 +1,4 @@
-:root {
+/* :root {
     --background-color: #ffffff;
     --text-color: #1a1a1a;
     --card-background: #f8f9fa;
@@ -42,7 +42,7 @@
         --modal-background: #161b22;
         --modal-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
-}
+} */
 
 .container {
     display: flex;
@@ -128,7 +128,6 @@
     flex-direction: column;
     gap: 8px;
     min-height: 200px;
-    /* Minimal height */
 }
 
 .postCard:hover {
@@ -157,16 +156,13 @@
 .postContent {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    /* Two columns for text */
     grid-template-rows: auto auto;
-    /* Rows for title and metadata */
     gap: 8px;
     align-items: start;
 }
 
 .postTitle {
     grid-column: 1 / -1;
-    /* Span full width */
     font-size: 1.125rem;
     font-weight: 700;
     margin: 0;

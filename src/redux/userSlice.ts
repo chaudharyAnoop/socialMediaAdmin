@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import token from "./tokens";
 
+const BASE_URL = "http://172.50.3.106:3002";
+
 interface User {
   id: string;
   email: string;
@@ -43,22 +45,24 @@ export const fetchUsers = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.get(
-        "http://172.50.3.106:3002/admin/AllUsers",
-        {
-          params: { limit, page },
-          headers: {
-            Accept: "*/*",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${BASE_URL}/admin/all-users`, {
+        params: { limit, page },
+        headers: {
+          Accept: "*/*",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.status !== 200) {
         throw new Error("Failed to fetch users");
       }
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to fetch users");
+      if (error.response?.status === 401) {
+        return rejectWithValue("Unauthorized: Invalid or missing token");
+      }
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch users"
+      );
     }
   }
 );
@@ -71,7 +75,7 @@ export const banUser = createAsyncThunk(
   ) => {
     try {
       const response = await axios.post(
-        `http://172.50.3.106:3002/admin/ban/${userId}`,
+        `${BASE_URL}/admin/ban/${userId}`,
         { reason },
         {
           headers: {
@@ -86,7 +90,12 @@ export const banUser = createAsyncThunk(
       }
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to ban user");
+      if (error.response?.status === 401) {
+        return rejectWithValue("Unauthorized: Invalid or missing token");
+      }
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to ban user"
+      );
     }
   }
 );
@@ -96,7 +105,7 @@ export const unbanUser = createAsyncThunk(
   async (userId: string, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `http://172.50.3.106:3002/admin/unban-user/${userId}`,
+        `${BASE_URL}/admin/unban-user/${userId}`,
         {},
         {
           headers: {
@@ -110,7 +119,12 @@ export const unbanUser = createAsyncThunk(
       }
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to unban user");
+      if (error.response?.status === 401) {
+        return rejectWithValue("Unauthorized: Invalid or missing token");
+      }
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to unban user"
+      );
     }
   }
 );

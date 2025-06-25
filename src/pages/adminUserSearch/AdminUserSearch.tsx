@@ -79,13 +79,6 @@ const AdminUserSearch: React.FC = () => {
               ? `Yes (${user.banReason || "No reason provided"})`
               : "No"}
           </p>
-          {/* {user.profilePicture && (
-            <img
-              src={user.profilePicture}
-              alt="Profile"
-              className={styles.profilePicture}
-            />
-          )} */}
         </div>
       )}
     </div>

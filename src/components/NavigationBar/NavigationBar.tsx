@@ -32,9 +32,10 @@ import { CgLogOut } from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../redux/store";
 import { toggleNavigationBar } from "../../redux/navigationBarSlice";
-import { Home, Image, MessageCircle, User } from "lucide-react";
+import { Home, Image, LogIn, MessageCircle, User, Users } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { SiAuthentik, SiGin } from "react-icons/si";
 
 function NavigationBar() {
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ function NavigationBar() {
                   <User className={styles.icon} />
                   <p className={styles.head}>Users</p>
                 </div>
-                <p className={styles.val}>new post</p>
+                <p className={styles.val}>all users</p>
               </div>
             </NavLink>
           </li>
@@ -89,7 +90,7 @@ function NavigationBar() {
                   <FaSearch className={styles.icon} />
                   <p className={styles.head}> Search</p>
                 </div>
-                <p className={styles.val}>{"Explore"}</p>
+                <p className={styles.val}>{"Users"}</p>
               </div>
             </NavLink>
           </li>{" "}
@@ -111,32 +112,32 @@ function NavigationBar() {
                   <Image className={styles.icon} />
                   <p className={styles.head}> All Post</p>
                 </div>
-                <p className={styles.val}>25</p>
+                <p className={styles.val}>18</p>
               </div>
             </NavLink>
           </li>{" "}
-          {/* <li className={styles.list_li}>
-            <NavLink to="/chat" className={styles.link}>
+          <li className={styles.list_li}>
+            <NavLink to="/follow" className={styles.link}>
               <div className={styles.tile}>
                 <div className={styles.name}>
-                  <MessageCircle className={styles.icon} />
-                  <p className={styles.head}> Message</p>
+                  <Users className={styles.icon} />
+                  <p className={styles.head}>Follows</p>
                 </div>
-                <p className={styles.val}>25</p>
+                <p className={styles.val}>5</p>
               </div>
             </NavLink>
-          </li>{" "} */}
-          {/* <li className={styles.list_li}>
-            <NavLink to="/noti" className={styles.link}>
+          </li>{" "}
+          <li className={styles.list_li}>
+            <NavLink to="/auth" className={styles.link}>
               <div className={styles.tile}>
                 <div className={styles.name}>
-                  <FaRegHeart className={styles.icon} />
-                  <p className={styles.head}> Notification</p>
+                  <LogIn className={styles.icon} />
+                  <p className={styles.head}>Auth</p>
                 </div>
-                <p className={styles.val}>5 not..</p>
+                <p className={styles.val}>authen..</p>
               </div>
             </NavLink>
-          </li>{" "} */}
+          </li>{" "}
           {/* <li className={styles.list_li}>
             <NavLink to="/" className={styles.link}>
               <div className={styles.tile}>
