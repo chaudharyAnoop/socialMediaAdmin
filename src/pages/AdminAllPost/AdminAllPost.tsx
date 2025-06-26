@@ -3,14 +3,25 @@ import { useDispatch, useSelector } from "react-redux";
 
 import type { AppDispatch, RootState } from "../../redux/store";
 import { fetchAllPosts, resetPosts, setPage } from "../../redux/adminPostSlice";
+import {
+  selectAdminPostsList,
+  selectAdminPostsStatus,
+  selectAdminPostsError,
+  selectAdminPostsPage,
+  selectAdminPostsLimit,
+  selectAdminPostsTotal,
+} from "../../redux/selectors/adminPostSelector";
 
 import styles from "./AllAdminPost.module.css";
 
 const AdminAllPosts: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { posts, status, error, page, limit, total } = useSelector(
-    (state: RootState) => state.adminPosts
-  );
+  const posts = useSelector(selectAdminPostsList);
+  const status = useSelector(selectAdminPostsStatus);
+  const error = useSelector(selectAdminPostsError);
+  const page = useSelector(selectAdminPostsPage);
+  const limit = useSelector(selectAdminPostsLimit);
+  const total = useSelector(selectAdminPostsTotal);
 
   const handlePageChange = (newPage: number) => dispatch(setPage(newPage));
   const paginatedPosts = posts.slice((page - 1) * limit, page * limit);

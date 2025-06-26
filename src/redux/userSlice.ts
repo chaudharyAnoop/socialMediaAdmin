@@ -3,8 +3,6 @@ import api from "../services/api";
 
 import type { UsersState } from "../Interfaces/user";
 
-const BASE_URL = "http://172.50.3.106:3002";
-
 const initialState: UsersState = {
   users: [],
   totalCount: 0,
@@ -13,8 +11,6 @@ const initialState: UsersState = {
   error: null,
   banError: {},
 };
-
-const localToken = localStorage.getItem("loginToken");
 
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
