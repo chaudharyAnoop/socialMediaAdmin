@@ -1,19 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../services/api";
 
-const BASE_URL = "http://172.50.3.106:3002";
-
-interface AuthState {
-  accessToken: string | null;
-  refreshToken: string | null;
-  loading: boolean;
-  error: string | null;
-}
-
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
+import type {
+  AuthState,
+  LoginCredentials,
+  LoginResponse,
+} from "../Interfaces/adminAuth";
 
 const initialState: AuthState = {
   accessToken: null,
@@ -26,20 +18,21 @@ export const login = createAsyncThunk(
   "auth/login",
   async ({ email, password }: LoginCredentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL}/admin/login`,
-        { email, password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "postman-token": "dsa",
-            Accept: "*/*",
-          },
-        }
-      );
-      return response.data;
+      const { data, status } = await api.post<LoginResponse>("/admin/login", {
+        email,
+        password,
+      });
+      if (status !== 201 || !data.accessToken) {
+        throw new Error("Invalid login response");
+      }
+      localStorage.setItem("loginToken", data.accessToken);
+      return data;
     } catch (error: any) {
-      return rejectWithValue("Unauthorized: Invalid email or password");
+      return rejectWithValue(
+        error.response?.status === 401
+          ? "Unauthorized: Invalid email or password"
+          : error.response?.data?.message || `Login failed: ${error.message}`
+      );
     }
   }
 );
@@ -55,6 +48,7 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.refreshToken = null;
       state.error = null;
+      localStorage.removeItem("loginToken");
     },
   },
   extraReducers: (builder) => {

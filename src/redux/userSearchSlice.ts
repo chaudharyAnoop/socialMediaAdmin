@@ -3,30 +3,9 @@ import {
   createAsyncThunk,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import axios from "axios";
-import token from "./tokens";
+import api from "../services/api";
 
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  fullName: string;
-  bio: string;
-  accountType: string;
-  profilePicture: string;
-  followersCount: number;
-  followingCount: number;
-  followers: string[];
-  following: string[];
-  isBanned: boolean;
-  banReason: string;
-}
-
-interface UserSearchState {
-  user: User | null;
-  status: "idle" | "loading" | "succeeded" | "failed";
-  error: string | null;
-}
+import type { User, UserSearchState } from "../Interfaces/userFollow";
 
 const initialState: UserSearchState = {
   user: null,
@@ -34,56 +13,28 @@ const initialState: UserSearchState = {
   error: null,
 };
 
-export const findUserByEmail = createAsyncThunk<
-  User,
-  string,
-  { rejectValue: string }
->("userSearch/findUserByEmail", async (email, { rejectWithValue }) => {
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return rejectWithValue("Valid email is required");
-  }
-  try {
-    const headers = token
-      ? {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          Accept: "*/*",
-        }
-      : {};
-    const response = await axios.get<{
-      id: string;
-      email: string;
-      username: string;
-      fullName: string;
-      bio: string;
-      accountType: string;
-      profilePicture: string;
-      followersCount: number;
-      followingCount: number;
-      followers: string[];
-      following: string[];
-      isBanned: boolean;
-      banReason: string;
-    }>(
-      `http://172.50.3.106:3002/admin/find-by-email?email=${encodeURIComponent(
-        email
-      )}`,
-      { headers }
-    );
-    const user = response.data;
-    if (!user?.id || !user.email) {
-      return rejectWithValue("Invalid user data received");
+export const findUserByEmail = createAsyncThunk(
+  "userSearch/findUserByEmail",
+  async (email: string, { rejectWithValue }) => {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return rejectWithValue("Valid email is required");
     }
-    return user as User;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
+    try {
+      const { data, status } = await api.get(
+        `/admin/find-by-email?email=${encodeURIComponent(email)}`
+      );
+      return status === 200 && data?.id && data.email
+        ? data
+        : rejectWithValue("Invalid user data received");
+    } catch (error: any) {
       return rejectWithValue(
-        error.response?.data?.message || error.message || "Failed to fetch user"
+        error.response?.status === 401
+          ? "Unauthorized"
+          : error.response?.data?.message || "Failed to fetch user"
       );
     }
-    return rejectWithValue("Unexpected error occurred");
   }
-});
+);
 
 const userSearchSlice = createSlice({
   name: "userSearch",
@@ -110,7 +61,7 @@ const userSearchSlice = createSlice({
       )
       .addCase(findUserByEmail.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload || "Failed to fetch user";
+        state.error = action.payload as string;
       });
   },
 });

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "./userlist.module.css";
+
 import type { AppDispatch, RootState } from "../../redux/store";
 import {
   banUser,
@@ -9,19 +9,8 @@ import {
   fetchUsers,
 } from "../../redux/userSlice";
 
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  fullName?: string;
-  bio: string;
-  accountType: string;
-  profilePicture: string;
-  followersCount: number;
-  followingCount: number;
-  isBanned: boolean;
-  banReason: string;
-}
+import styles from "./userlist.module.css";
+import type { UserState } from "../../Interfaces/user";
 
 const UsersList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -91,7 +80,7 @@ const UsersList: React.FC = () => {
       {status === "succeeded" && users.length > 0 && (
         <>
           <div className={styles.userGrid}>
-            {users.map((user: User) => (
+            {users.map((user: UserState) => (
               <div key={user.id} className={styles.userCard}>
                 <h3>{user.username}</h3>
                 <p>Email: {user.email}</p>

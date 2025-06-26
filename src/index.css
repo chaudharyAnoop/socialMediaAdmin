@@ -161,3 +161,14 @@ button:focus-visible {
 @media screen and (max-width: 520px) {
   @media (prefers-color-scheme: dark) {}
 } */
+
+
+
+/* all css changes done using properties in variables */
+/* changed apis format in redux made separate service  */
+/* kept interfaces in the separate files */
+/* removed all the unused imports */
+/* changed all importing in professional way */
+/* updated use effect */
+/* use arrow functions in proper way */
+/* kept headers at one place */

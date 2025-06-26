@@ -4,29 +4,9 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import axios from "axios";
+
 import token from "./tokens";
-
-interface Post {
-  _id: string;
-  UserId: string;
-  content: string;
-  media: string[];
-  visibility: string;
-  deleted: boolean;
-  moderated: boolean;
-  keywords?: string[];
-  isReported: boolean;
-  reportReason: string;
-}
-
-interface AdminPostsState {
-  posts: Post[];
-  status: "idle" | "loading" | "succeeded" | "failed";
-  error: string | null;
-  page: number;
-  limit: number;
-  total: number;
-}
+import type { AdminPostsState, Post } from "../Interfaces/adminPost";
 
 const initialState: AdminPostsState = {
   posts: [],

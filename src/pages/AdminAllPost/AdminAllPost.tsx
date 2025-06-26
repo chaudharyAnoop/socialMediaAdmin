@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "./AllAdminPost.module.css";
+
 import type { AppDispatch, RootState } from "../../redux/store";
 import { fetchAllPosts, resetPosts, setPage } from "../../redux/adminPostSlice";
+
+import styles from "./AllAdminPost.module.css";
 
 const AdminAllPosts: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -10,18 +12,15 @@ const AdminAllPosts: React.FC = () => {
     (state: RootState) => state.adminPosts
   );
 
+  const handlePageChange = (newPage: number) => dispatch(setPage(newPage));
+  const paginatedPosts = posts.slice((page - 1) * limit, page * limit);
+  const totalPages = Math.ceil(total / limit);
+
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchAllPosts());
     }
   }, [status, dispatch]);
-
-  const handlePageChange = (newPage: number) => {
-    dispatch(setPage(newPage));
-  };
-
-  const paginatedPosts = posts.slice((page - 1) * limit, page * limit);
-  const totalPages = Math.ceil(total / limit);
 
   return (
     <div className={styles.container}>

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "./userFollow.module.css";
+
 import type { AppDispatch, RootState } from "../../redux/store";
 import {
   clearError,
   fetchFollowers,
   fetchFollowing,
 } from "../../redux/userFollowSlice";
+
 import UserChart from "../charts/UserChart";
+import styles from "./userFollow.module.css";
 
 const UserFollow: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

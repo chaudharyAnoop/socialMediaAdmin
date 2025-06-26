@@ -1,11 +1,13 @@
-import NavigationBar from "./components/NavigationBar/NavigationBar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import styles from "./App.module.css";
+
+import NavigationBar from "./components/NavigationBar/NavigationBar";
 import UsersList from "./pages/UserList/UserList";
 import AdminUserSearch from "./pages/adminUserSearch/AdminUserSearch";
 import AdminAllPosts from "./pages/AdminAllPost/AdminAllPost";
 import UserFollow from "./pages/UserFollow/userFollow";
 import AdminLogin from "./pages/AdminLogin/adminLogin";
+
+import styles from "./App.module.css";
 
 function App() {
   return (

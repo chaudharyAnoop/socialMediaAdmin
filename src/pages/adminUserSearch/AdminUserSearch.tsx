@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "./AdminUserSearch.module.css";
+
 import type { AppDispatch, RootState } from "../../redux/store";
 import { findUserByEmail, resetUserSearch } from "../../redux/userSearchSlice";
+
 import UserChart from "../charts/UserChart";
+import styles from "./AdminUserSearch.module.css";
 
 const AdminUserSearch: React.FC = () => {
   const [email, setEmail] = useState("");

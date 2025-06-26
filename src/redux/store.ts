@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+
 import sidebarReducer from "./navigationBarSlice";
 import userReducer from "./userSlice";
 import userSearchReducer from "./userSearchSlice";

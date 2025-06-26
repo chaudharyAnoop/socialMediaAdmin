@@ -1,8 +1,8 @@
-/* :root {
+:root {
     --background-color: #ffffff;
     --text-color: #1a1a1a;
     --card-background: #f8f9fa;
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --card-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
     --button-background: linear-gradient(45deg, #007bff, #00a8ff);
     --button-text: #ffffff;
     --button-hover: linear-gradient(45deg, #0056b3, #0078cc);
@@ -16,9 +16,27 @@
     --unban-button-background: linear-gradient(45deg, #28a745, #38c172);
     --unban-button-hover: linear-gradient(45deg, #218838, #2f9e5e);
     --modal-background: #ffffff;
-    --modal-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    --modal-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.2);
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --font-primary: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 1.75rem;
+    --font-size-2xl: 2.25rem;
+    --font-size-3xl: 2.5rem;
+    --border-radius-sm: 0.5rem;
+    --border-radius-md: 0.75rem;
+    --border-width: 0.0625rem;
+    --shadow-focus: 0 0 0 0.1875rem;
+    --min-card-height: 12.5rem;
+    --min-card-height-lg: 13.75rem;
+    --min-card-height-sm: 11.25rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,7 +44,7 @@
         --background-color: #000000;
         --text-color: #e6edf3;
         --card-background: #161b22;
-        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        --card-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.6);
         --button-background: linear-gradient(45deg, #ffffff, #f0f6ff);
         --button-text: #0d1117;
         --button-hover: linear-gradient(45deg, #e0e0e0, #d0d9e6);
@@ -40,14 +58,14 @@
         --unban-button-background: linear-gradient(45deg, #38c172, #4cd188);
         --unban-button-hover: linear-gradient(45deg, #2f9e5e, #3bb76f);
         --modal-background: #161b22;
-        --modal-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        --modal-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.4);
     }
-} */
+}
 
 .container {
     display: flex;
     flex-direction: column;
-    padding: 32px;
+    padding: var(--spacing-2xl);
     margin: 0 auto;
     min-height: 100vh;
     background-color: var(--background-color);
@@ -60,79 +78,80 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 32px;
+    margin-bottom: var(--spacing-2xl);
 }
 
 .header-title {
-    font-size: 2.25rem;
+    font-size: var(--font-size-2xl);
     font-weight: 700;
     color: var(--text-color);
     letter-spacing: -0.02em;
 }
 
 .resetButton {
-    padding: 12px 24px;
-    font-size: 1rem;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-base);
     font-weight: 600;
     background: var(--reset-button-background);
     color: var(--button-text);
     border: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
     transition: var(--transition);
 }
 
 .resetButton:hover:not(:disabled) {
     background: var(--reset-button-hover);
-    transform: translateY(-2px);
+    transform: translateY(-0.125rem);
+    /* 2px */
 }
 
 .resetButton:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
+    box-shadow: var(--shadow-focus) rgba(220, 53, 69, 0.3);
 }
 
 .loading,
 .error,
 .noData {
     text-align: center;
-    font-size: 1.25rem;
-    margin: 32px 0;
+    font-size: var(--font-size-lg);
+    margin: var(--spacing-2xl) 0;
     font-weight: 500;
     color: var(--text-color);
 }
 
 .error {
     color: var(--error-color);
-    padding: 12px;
-    border-radius: 8px;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
     background: rgba(220, 53, 69, 0.1);
 }
 
 .postGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 28px;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: var(--spacing-lg);
 }
 
 .postCard {
-    padding: 16px;
-    border-radius: 12px;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
     background-color: var(--card-background);
     box-shadow: var(--card-shadow);
-    border: 1px solid var(--border-color);
+    border: var(--border-width) solid var(--border-color);
     transition: var(--transition);
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    min-height: 200px;
+    gap: var(--spacing-sm);
+    min-height: var(--min-card-height);
 }
 
 .postCard:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-0.25rem);
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
     border-color: rgba(0, 123, 255, 0.2);
 }
 
@@ -142,7 +161,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 4px;
+    height: 0.25rem;
     background: var(--button-background);
     transform: scaleX(0);
     transform-origin: left;
@@ -157,7 +176,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
-    gap: 8px;
+    gap: var(--spacing-sm);
     align-items: start;
 }
 
@@ -172,7 +191,7 @@
 }
 
 .postCard p {
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
     margin: 0;
     color: var(--text-color);
     opacity: 0.85;
@@ -182,9 +201,9 @@
 .postImage {
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: var(--spacing-sm);
+    border: var(--border-width) solid var(--border-color);
     transition: var(--transition);
     object-fit: cover;
 }
@@ -197,22 +216,22 @@
 .postActions {
     display: flex;
     flex-direction: row;
-    gap: 8px;
-    margin-top: 8px;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
     justify-content: flex-end;
 }
 
 .banButton,
 .unbanButton {
-    padding: 10px 20px;
+    padding: var(--spacing-sm) var(--spacing-md);
     border: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
     font-weight: 600;
     color: #ffffff;
     transition: var(--transition);
-    width: 140px;
+    width: 8.75rem;
 }
 
 .banButton {
@@ -221,7 +240,7 @@
 
 .banButton:hover:not(:disabled) {
     background: var(--ban-button-hover);
-    transform: translateY(-2px);
+    transform: translateY(-0.125rem);
 }
 
 .unbanButton {
@@ -230,7 +249,7 @@
 
 .unbanButton:hover:not(:disabled) {
     background: var(--unban-button-hover);
-    transform: translateY(-2px);
+    transform: translateY(-0.125rem);
 }
 
 .banButton:disabled,
@@ -242,7 +261,7 @@
 .banButton:focus,
 .unbanButton:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
+    box-shadow: var(--shadow-focus) rgba(220, 53, 69, 0.3);
 }
 
 .modal {
@@ -260,36 +279,36 @@
 
 .modalContent {
     background-color: var(--modal-background);
-    padding: 24px;
-    border-radius: 12px;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
     box-shadow: var(--modal-shadow);
-    max-width: 600px;
+    max-width: 37.5rem;
     width: 90%;
     color: var(--text-color);
 }
 
 .modalContent h2 {
-    font-size: 1.75rem;
-    margin-bottom: 16px;
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-md);
     font-weight: 700;
 }
 
 .modalContent label {
     display: block;
-    font-size: 1rem;
-    margin-bottom: 8px;
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-sm);
     font-weight: 500;
 }
 
 .banReasonInput {
     width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    padding: var(--spacing-md);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-sm);
     background-color: var(--card-background);
     color: var(--text-color);
-    font-size: 1rem;
-    min-height: 100px;
+    font-size: var(--font-size-base);
+    min-height: 6.25rem;
     resize: vertical;
     transition: var(--transition);
 }
@@ -297,23 +316,23 @@
 .banReasonInput:focus {
     outline: none;
     border-color: var(--button-background);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    box-shadow: var(--shadow-focus) rgba(0, 123, 255, 0.2);
 }
 
 .modalActions {
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
-    margin-top: 16px;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
 }
 
 .confirmButton,
 .cancelButton {
-    padding: 12px 24px;
+    padding: var(--spacing-md) var(--spacing-lg);
     border: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
-    font-size: 1rem;
+    font-size: var(--font-size-base);
     font-weight: 600;
     transition: var(--transition);
 }
@@ -325,7 +344,7 @@
 
 .confirmButton:hover:not(:disabled) {
     background: var(--ban-button-hover);
-    transform: translateY(-2px);
+    transform: translateY(-0.125rem);
 }
 
 .confirmButton:disabled {
@@ -340,32 +359,32 @@
 
 .cancelButton:hover {
     background: var(--button-hover);
-    transform: translateY(-2px);
+    transform: translateY(-0.125rem);
 }
 
 .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 16px;
-    margin-top: 32px;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-2xl);
 }
 
 .pageButton {
-    padding: 12px 24px;
-    font-size: 1rem;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-base);
     font-weight: 600;
     background: var(--button-background);
     color: var(--button-text);
     border: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
     transition: var(--transition);
 }
 
 .pageButton:hover:not(:disabled) {
     background: var(--button-hover);
-    transform: translateY(-2px);
+    transform: translateY(-0.125rem);
 }
 
 .pageButton:disabled {
@@ -375,58 +394,59 @@
 
 .pageButton:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+    box-shadow: var(--shadow-focus) rgba(0, 123, 255, 0.3);
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 64rem) {
     .container {
-        width: calc(100vw - 370px);
-        padding: 48px;
+        width: calc(100vw - 23.125rem);
+        padding: var(--spacing-2xl);
     }
 
     .header-title {
-        font-size: 2.5rem;
+        font-size: var(--font-size-3xl);
     }
 
     .postGrid {
-        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-        gap: 32px;
+        grid-template-columns: repeat(auto-fit, minmax(22.5rem, 1fr));
+        gap: var(--spacing-2xl);
     }
 
     .postCard {
-        padding: 20px;
-        min-height: 220px;
-        gap: 12px;
+        padding: var(--spacing-lg);
+        min-height: var(--min-card-height-lg);
+        gap: var(--spacing-md);
     }
 
     .postContent {
-        gap: 12px;
+        gap: var(--spacing-md);
     }
 }
 
-@media screen and (max-width: 1024px) and (min-width: 640px) {
+@media screen and (max-width: 64rem) and (min-width: 40rem) {
+
     .container {
-        padding: 24px;
-        max-width: calc(100vw - 80px);
+        padding: var(--spacing-lg);
+        max-width: calc(100vw - 5rem);
     }
 
     .header-title {
-        font-size: 2rem;
+        font-size: var(--font-size-2xl);
     }
 
     .postGrid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 24px;
+        grid-template-columns: repeat(auto-fit, minmax(17.5rem, 1fr));
+        gap: var(--spacing-lg);
     }
 
     .postCard {
-        padding: 16px;
-        min-height: 200px;
-        gap: 8px;
+        padding: var(--spacing-md);
+        min-height: var(--min-card-height);
+        gap: var(--spacing-sm);
     }
 
     .postContent {
-        gap: 8px;
+        gap: var(--spacing-sm);
     }
 
     .resetButton,
@@ -435,62 +455,62 @@
     .unbanButton,
     .confirmButton,
     .cancelButton {
-        padding: 10px 20px;
-        font-size: 0.875rem;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
     }
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 40rem) {
+
     .container {
-        padding: 16px;
-        max-width: calc(100vw - 16px);
-        margin-top: 30px;
+        padding: var(--spacing-md);
+        max-width: calc(100vw - 1rem);
+        margin-top: var(--spacing-lg);
     }
 
     .header {
         flex-direction: column;
-        gap: 16px;
+        gap: var(--spacing-md);
         text-align: center;
-        margin-bottom: 24px;
+        margin-bottom: var(--spacing-lg);
     }
 
     .header-title {
-        font-size: 1.75rem;
+        font-size: var(--font-size-xl);
     }
 
     .resetButton {
-        padding: 10px 16px;
-        font-size: 0.875rem;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
         width: 100%;
     }
 
     .loading,
     .error,
     .noData {
-        font-size: 1rem;
-        margin: 24px 0;
+        font-size: var(--font-size-base);
+        margin: var(--spacing-lg) 0;
     }
 
     .postGrid {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: var(--spacing-md);
     }
 
     .postCard {
-        padding: 12px;
-        border-radius: 10px;
-        min-height: 180px;
-        gap: 6px;
+        padding: var(--spacing-sm);
+        border-radius: var(--border-radius-sm);
+        min-height: var(--min-card-height-sm);
+        gap: 0.375rem;
     }
 
     .postContent {
         grid-template-columns: 1fr;
-        /* Stack text in single column on mobile */
-        gap: 6px;
+        gap: 0.375rem;
     }
 
     .postTitle {
-        font-size: 1rem;
+        font-size: var(--font-size-base);
         line-height: 1.3;
     }
 
@@ -500,72 +520,72 @@
     }
 
     .postImage {
-        margin-bottom: 6px;
+        margin-bottom: 0.375rem;
     }
 
     .postActions {
         flex-direction: column;
-        gap: 6px;
+        gap: 0.375rem;
         justify-content: center;
-        margin-top: 6px;
+        margin-top: 0.375rem;
     }
 
     .banButton,
     .unbanButton {
-        padding: 8px 16px;
-        font-size: 0.875rem;
-        width: 160px;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
+        width: 10rem;
     }
 
     .pagination {
         flex-direction: row;
         flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 24px;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-lg);
     }
 
     .pageButton {
-        padding: 10px 20px;
-        font-size: 0.875rem;
-        width: 120px;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
+        width: 7.5rem;
     }
 
     .modal {
-        padding: 12px;
+        padding: var(--spacing-md);
     }
 
     .modalContent {
-        padding: 16px;
-        border-radius: 10px;
+        padding: var(--spacing-md);
+        border-radius: var(--border-radius-sm);
         width: 95%;
-        max-width: 450px;
+        max-width: 28.125rem;
     }
 
     .modalContent h2 {
-        font-size: 1.25rem;
-        margin-bottom: 12px;
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--spacing-md);
     }
 
     .modalContent label {
-        font-size: 0.875rem;
+        font-size: var(--font-size-sm);
     }
 
     .banReasonInput {
-        font-size: 0.875rem;
-        padding: 8px;
-        min-height: 80px;
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-sm);
+        min-height: 5rem;
     }
 
     .modalActions {
         flex-direction: column;
-        gap: 8px;
-        margin-top: 12px;
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-md);
     }
 
     .confirmButton,
     .cancelButton {
-        padding: 10px 16px;
-        font-size: 0.875rem;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
         width: 100%;
     }
 }
@@ -587,6 +607,6 @@
 
     .banReasonInput:focus {
         border-color: #ffffff;
-        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+        box-shadow: var(--shadow-focus) rgba(255, 255, 255, 0.2);
     }
 }

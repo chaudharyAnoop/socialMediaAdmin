@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "./adminLogin.module.css";
+
 import type { AppDispatch, RootState } from "../../redux/store";
 import { clearError, login } from "../../redux/authSlice";
+
+import styles from "./adminLogin.module.css";
 
 const AdminLogin: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

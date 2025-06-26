@@ -1,33 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import token from "./tokens";
+import api from "../services/api";
+
+import type { UsersState } from "../Interfaces/user";
 
 const BASE_URL = "http://172.50.3.106:3002";
-
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  fullName?: string;
-  bio: string;
-  accountType: string;
-  profilePicture: string;
-  followersCount: number;
-  followingCount: number;
-  followers?: string[];
-  following?: string[];
-  isBanned: boolean;
-  banReason: string;
-}
-
-interface UsersState {
-  users: User[];
-  totalCount: number;
-  status: "idle" | "loading" | "succeeded" | "failed";
-  banStatus: { [key: string]: "idle" | "loading" | "failed" };
-  error: string | null;
-  banError: { [key: string]: string | null };
-}
 
 const initialState: UsersState = {
   users: [],
@@ -38,6 +14,8 @@ const initialState: UsersState = {
   banError: {},
 };
 
+const localToken = localStorage.getItem("loginToken");
+
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
   async (
@@ -45,23 +23,15 @@ export const fetchUsers = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.get(`${BASE_URL}/admin/all-users`, {
+      const { data, status } = await api.get("/admin/all-users", {
         params: { limit, page },
-        headers: {
-          Accept: "*/*",
-          Authorization: `Bearer ${token}`,
-        },
       });
-      if (response.status !== 200) {
-        throw new Error("Failed to fetch users");
-      }
-      return response.data;
+      return status === 200 ? data : rejectWithValue("Failed to fetch users");
     } catch (error: any) {
-      if (error.response?.status === 401) {
-        return rejectWithValue("Unauthorized: Invalid or missing token");
-      }
       return rejectWithValue(
-        error.response?.data?.message || "Failed to fetch users"
+        error.response?.status === 401
+          ? "Unauthorized"
+          : error.response?.data?.message || "Failed to fetch users"
       );
     }
   }
@@ -74,27 +44,15 @@ export const banUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL}/admin/ban/${userId}`,
-        { reason },
-        {
-          headers: {
-            Accept: "*/*",
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.status !== 201) {
-        throw new Error("Failed to ban user");
-      }
-      return response.data;
+      const { data, status } = await api.post(`/admin/ban/${userId}`, {
+        reason,
+      });
+      return status === 201 ? data : rejectWithValue("Failed to ban user");
     } catch (error: any) {
-      if (error.response?.status === 401) {
-        return rejectWithValue("Unauthorized: Invalid or missing token");
-      }
       return rejectWithValue(
-        error.response?.data?.message || "Failed to ban user"
+        error.response?.status === 401
+          ? "Unauthorized"
+          : error.response?.data?.message || "Failed to ban user"
       );
     }
   }
@@ -104,26 +62,16 @@ export const unbanUser = createAsyncThunk(
   "users/unbanUser",
   async (userId: string, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL}/admin/unban-user/${userId}`,
-        {},
-        {
-          headers: {
-            Accept: "*/*",
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const { data, status } = await api.post(
+        `/admin/unban-user/${userId}`,
+        {}
       );
-      if (response.status !== 201) {
-        throw new Error("Failed to unban user");
-      }
-      return response.data;
+      return status === 201 ? data : rejectWithValue("Failed to unban user");
     } catch (error: any) {
-      if (error.response?.status === 401) {
-        return rejectWithValue("Unauthorized: Invalid or missing token");
-      }
       return rejectWithValue(
-        error.response?.data?.message || "Failed to unban user"
+        error.response?.status === 401
+          ? "Unauthorized"
+          : error.response?.data?.message || "Failed to unban user"
       );
     }
   }

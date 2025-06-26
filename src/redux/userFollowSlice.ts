@@ -1,20 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import token from "./tokens";
+import api from "../services/api";
 
-const BASE_URL = "http://172.50.3.106:3002";
-
-interface FollowState {
-  followers: { totalCount: number };
-  following: { totalCount: number };
-  loading: boolean;
-  error: string | null;
-}
-
-interface FetchFollowParams {
-  userId: string;
-  token: string;
-}
+import type { FetchFollowParams, FollowState } from "../Interfaces/userFollow";
 
 const initialState: FollowState = {
   followers: { totalCount: 0 },
@@ -27,19 +14,13 @@ export const fetchFollowers = createAsyncThunk(
   "follow/fetchFollowers",
   async ({ userId }: FetchFollowParams, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/admin/followers/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "*/*",
-          },
-        }
-      );
-      return response.data;
+      const { data, status } = await api.get(`/admin/followers/${userId}`);
+      return status === 200 ? data : rejectWithValue("User not found");
     } catch (error: any) {
       return rejectWithValue(
-        error.response?.status === 401 ? "Unauthorized" : "User not found"
+        error.response?.status === 401
+          ? "Unauthorized"
+          : error.response?.data?.message || "User not found"
       );
     }
   }
@@ -49,19 +30,13 @@ export const fetchFollowing = createAsyncThunk(
   "follow/fetchFollowing",
   async ({ userId }: FetchFollowParams, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/admin/following/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "*/*",
-          },
-        }
-      );
-      return response.data;
+      const { data, status } = await api.get(`/admin/following/${userId}`);
+      return status === 200 ? data : rejectWithValue("User not found");
     } catch (error: any) {
       return rejectWithValue(
-        error.response?.status === 401 ? "Unauthorized" : "User not found"
+        error.response?.status === 401
+          ? "Unauthorized"
+          : error.response?.data?.message || "User not found"
       );
     }
   }
