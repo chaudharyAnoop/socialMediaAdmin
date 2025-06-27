@@ -13,8 +13,6 @@
     align-items: flex-start;
     justify-content: space-between;
   }
-
-  @media (prefers-color-scheme: dark) {}
 }
 
 @media screen and (max-width: 900px) and (min-width: 520px) {
@@ -32,9 +30,6 @@
     align-items: flex-start;
     justify-content: space-between;
   }
-
-
-  @media (prefers-color-scheme: dark) {}
 }
 
 @media screen and (max-width: 520px) {
@@ -52,7 +47,4 @@
     align-items: flex-start;
     justify-content: space-between;
   }
-
-
-  @media (prefers-color-scheme: dark) {}
 }

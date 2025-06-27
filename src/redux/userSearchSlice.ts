@@ -7,9 +7,11 @@ import api from "../services/api";
 
 import type { User, UserSearchState } from "../Interfaces/userFollow";
 
+import { Status } from "../constants/enums";
+
 const initialState: UserSearchState = {
   user: null,
-  status: "idle",
+  status: Status.Idle,
   error: null,
 };
 
@@ -42,25 +44,25 @@ const userSearchSlice = createSlice({
   reducers: {
     resetUserSearch: (state) => {
       state.user = null;
-      state.status = "idle";
+      state.status = Status.Idle;
       state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(findUserByEmail.pending, (state) => {
-        state.status = "loading";
+        state.status = Status.Loading;
         state.error = null;
       })
       .addCase(
         findUserByEmail.fulfilled,
         (state, action: PayloadAction<User>) => {
-          state.status = "succeeded";
+          state.status = Status.Succeeded;
           state.user = action.payload;
         }
       )
       .addCase(findUserByEmail.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = Status.Failed;
         state.error = action.payload as string;
       });
   },

@@ -1,8 +1,11 @@
+import { Status } from "../constants/enums";
+
 export interface FollowState {
   followers: { totalCount: number };
   following: { totalCount: number };
   loading: boolean;
   error: string | null;
+  status: Status;
 }
 
 export interface FetchFollowParams {
@@ -27,6 +30,6 @@ export interface User {
 
 export interface UserSearchState {
   user: User | null;
-  status: "idle" | "loading" | "succeeded" | "failed";
+  status: Status;
   error: string | null;
 }

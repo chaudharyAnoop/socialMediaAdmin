@@ -7,11 +7,14 @@ import type {
   LoginResponse,
 } from "../Interfaces/adminAuth";
 
+import { AuthStatus } from "../constants/enums";
+
 const initialState: AuthState = {
   accessToken: null,
   refreshToken: null,
   loading: false,
   error: null,
+  status: AuthStatus.Idle,
 };
 
 export const login = createAsyncThunk(
@@ -54,15 +57,18 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
+        state.status = AuthStatus.Loading;
         state.loading = true;
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
+        state.status = AuthStatus.Succeeded;
         state.loading = false;
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
       })
       .addCase(login.rejected, (state, action) => {
+        state.status = AuthStatus.Failed;
         state.loading = false;
         state.error = action.payload as string;
       });

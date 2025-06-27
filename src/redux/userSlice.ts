@@ -3,10 +3,12 @@ import api from "../services/api";
 
 import type { UsersState } from "../Interfaces/user";
 
+import { Status, BanStatus } from "../constants/enums";
+
 const initialState: UsersState = {
   users: [],
   totalCount: 0,
-  status: "idle",
+  status: Status.Idle,
   banStatus: {},
   error: null,
   banError: {},
@@ -79,30 +81,30 @@ const usersSlice = createSlice({
   reducers: {
     clearBanError: (state, action: { payload: string }) => {
       state.banError[action.payload] = null;
-      state.banStatus[action.payload] = "idle";
+      state.banStatus[action.payload] = BanStatus.Idle;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.pending, (state) => {
-        state.status = "loading";
+        state.status = Status.Loading;
         state.error = null;
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = Status.Succeeded;
         state.users = action.payload.users || [];
         state.totalCount = action.payload.totalCount || 0;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = Status.Failed;
         state.error = (action.payload as string) || "Failed to fetch users";
       })
       .addCase(banUser.pending, (state, action) => {
-        state.banStatus[action.meta.arg.userId] = "loading";
+        state.banStatus[action.meta.arg.userId] = BanStatus.Loading;
         state.banError[action.meta.arg.userId] = null;
       })
       .addCase(banUser.fulfilled, (state, action) => {
-        state.banStatus[action.meta.arg.userId] = "idle";
+        state.banStatus[action.meta.arg.userId] = BanStatus.Idle;
         const bannedUser = action.payload;
         const index = state.users.findIndex(
           (user) => user.id === bannedUser.id
@@ -116,16 +118,16 @@ const usersSlice = createSlice({
         }
       })
       .addCase(banUser.rejected, (state, action) => {
-        state.banStatus[action.meta.arg.userId] = "failed";
+        state.banStatus[action.meta.arg.userId] = BanStatus.Failed;
         state.banError[action.meta.arg.userId] =
           (action.payload as string) || "Failed to ban user";
       })
       .addCase(unbanUser.pending, (state, action) => {
-        state.banStatus[action.meta.arg] = "loading";
+        state.banStatus[action.meta.arg] = BanStatus.Loading;
         state.banError[action.meta.arg] = null;
       })
       .addCase(unbanUser.fulfilled, (state, action) => {
-        state.banStatus[action.meta.arg] = "idle";
+        state.banStatus[action.meta.arg] = BanStatus.Idle;
         const unbannedUser = action.payload;
         const index = state.users.findIndex(
           (user) => user.id === unbannedUser.id
@@ -139,7 +141,7 @@ const usersSlice = createSlice({
         }
       })
       .addCase(unbanUser.rejected, (state, action) => {
-        state.banStatus[action.meta.arg] = "failed";
+        state.banStatus[action.meta.arg] = BanStatus.Failed;
         state.banError[action.meta.arg] =
           (action.payload as string) || "Failed to unban user";
       });

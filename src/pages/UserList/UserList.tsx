@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import type { AppDispatch, RootState } from "../../redux/store";
@@ -9,21 +9,72 @@ import {
   fetchUsers,
 } from "../../redux/userSlice";
 
+import {
+  selectUsers,
+  selectUsersTotalCount,
+  selectUsersStatus,
+  selectUsersError,
+  selectUsersBanStatus,
+  selectUsersBanError,
+} from "../../redux/selectors/userSelector";
+
 import styles from "./userlist.module.css";
 import type { UserState } from "../../Interfaces/user";
+import Strings from "../../constants/strings";
+
+type State = {
+  page: number;
+  limit: number;
+  banPrompt: { userId: string; username: string } | null;
+  banReason: string;
+};
+
+type Action =
+  | { type: "SET_PAGE"; payload: number }
+  | {
+      type: "SET_BAN_PROMPT";
+      payload: { userId: string; username: string } | null;
+    }
+  | { type: "SET_BAN_REASON"; payload: string }
+  | { type: "RESET_BAN_PROMPT" };
+
+const initialState: State = {
+  page: 1,
+  limit: 10,
+  banPrompt: null,
+  banReason: "",
+};
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "SET_PAGE":
+      return { ...state, page: action.payload };
+    case "SET_BAN_PROMPT":
+      return { ...state, banPrompt: action.payload, banReason: "" };
+    case "SET_BAN_REASON":
+      return { ...state, banReason: action.payload };
+    case "RESET_BAN_PROMPT":
+      return { ...state, banPrompt: null, banReason: "" };
+    default:
+      return state;
+  }
+}
 
 const UsersList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { users, totalCount, status, error, banStatus, banError } = useSelector(
-    (state: RootState) => state.users
+    (state: RootState) => ({
+      users: selectUsers(state),
+      totalCount: selectUsersTotalCount(state),
+      status: selectUsersStatus(state),
+      error: selectUsersError(state),
+      banStatus: selectUsersBanStatus(state),
+      banError: selectUsersBanError(state),
+    })
   );
-  const [page, setPage] = useState(1);
-  const [limit] = useState(10);
-  const [banPrompt, setBanPrompt] = useState<{
-    userId: string;
-    username: string;
-  } | null>(null);
-  const [banReason, setBanReason] = useState("");
+
+  const [state, localDispatch] = useReducer(reducer, initialState);
+  const { page, limit, banPrompt, banReason } = state;
 
   useEffect(() => {
     dispatch(fetchUsers({ limit, page }));
@@ -31,13 +82,12 @@ const UsersList: React.FC = () => {
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= Math.ceil(totalCount / limit)) {
-      setPage(newPage);
+      localDispatch({ type: "SET_PAGE", payload: newPage });
     }
   };
 
   const handleBanClick = (userId: string, username: string) => {
-    setBanPrompt({ userId, username });
-    setBanReason("");
+    localDispatch({ type: "SET_BAN_PROMPT", payload: { userId, username } });
   };
 
   const handleUnbanClick = (userId: string) => {
@@ -47,16 +97,14 @@ const UsersList: React.FC = () => {
   const handleBanConfirm = () => {
     if (banPrompt && banReason.trim()) {
       dispatch(banUser({ userId: banPrompt.userId, reason: banReason.trim() }));
-      setBanPrompt(null);
-      setBanReason("");
+      localDispatch({ type: "RESET_BAN_PROMPT" });
     }
   };
 
   const handleBanCancel = () => {
     if (banPrompt) {
       dispatch(clearBanError(banPrompt.userId));
-      setBanPrompt(null);
-      setBanReason("");
+      localDispatch({ type: "RESET_BAN_PROMPT" });
     }
   };
 
@@ -65,16 +113,23 @@ const UsersList: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h3>Users List ({totalCount})</h3>
+        <h3>
+          {Strings.USERS_LIST_TITLE} ({totalCount})
+        </h3>
       </div>
 
       {status === "loading" && (
-        <p className={styles.loading}>Loading users...</p>
+        <p className={styles.loading}>{Strings.LOADING_USERS}</p>
       )}
-      {status === "failed" && <p className={styles.error}>Error: {error}</p>}
+      {status === "failed" && (
+        <p className={styles.error}>
+          {Strings.ERROR_PREFIX}
+          {error}
+        </p>
+      )}
 
       {status === "succeeded" && users.length === 0 && (
-        <p className={styles.noData}>No users found.</p>
+        <p className={styles.noData}>{Strings.NO_USERS_FOUND}</p>
       )}
 
       {status === "succeeded" && users.length > 0 && (
@@ -83,12 +138,29 @@ const UsersList: React.FC = () => {
             {users.map((user: UserState) => (
               <div key={user.id} className={styles.userCard}>
                 <h3>{user.username}</h3>
-                <p>Email: {user.email}</p>
-                <p>Name: {user.fullName || "N/A"}</p>
-                <p>Followers: {user.followersCount}</p>
-                <p>Following: {user.followingCount}</p>
-                <p>Status: {user.isBanned ? "Banned" : "Active"}</p>
-                {user.isBanned && <p>Reason: {user.banReason || "N/A"}</p>}
+                <p>
+                  {Strings.EMAIL_LABEL} {user.email}
+                </p>
+                <p>
+                  {Strings.NAME_LABEL} {user.fullName || "N/A"}
+                </p>
+                <p>
+                  {Strings.FOLLOWERS_LABEL} {user.followersCount}
+                </p>
+                <p>
+                  {Strings.FOLLOWING_LABEL} {user.followingCount}
+                </p>
+                <p>
+                  {Strings.STATUS_LABEL}{" "}
+                  {user.isBanned
+                    ? Strings.STATUS_BANNED
+                    : Strings.STATUS_ACTIVE}
+                </p>
+                {user.isBanned && (
+                  <p>
+                    {Strings.REASON_LABEL} {user.banReason || "N/A"}
+                  </p>
+                )}
                 <div className={styles.userActions}>
                   {!user.isBanned ? (
                     <button
@@ -97,8 +169,8 @@ const UsersList: React.FC = () => {
                       disabled={banStatus[user.id] === "loading"}
                     >
                       {banStatus[user.id] === "loading"
-                        ? "Banning..."
-                        : "Ban User"}
+                        ? Strings.BANNING
+                        : Strings.BAN_USER}
                     </button>
                   ) : (
                     <button
@@ -107,8 +179,8 @@ const UsersList: React.FC = () => {
                       disabled={banStatus[user.id] === "loading"}
                     >
                       {banStatus[user.id] === "loading"
-                        ? "Unbanning..."
-                        : "Unban User"}
+                        ? Strings.UNBANNING
+                        : Strings.UNBAN_USER}
                     </button>
                   )}
                 </div>
@@ -125,7 +197,7 @@ const UsersList: React.FC = () => {
               onClick={() => handlePageChange(page - 1)}
               className={styles.pageButton}
             >
-              Previous
+              {Strings.PREVIOUS}
             </button>
             <span>
               Page {page} of {totalPages || 1}
@@ -135,7 +207,7 @@ const UsersList: React.FC = () => {
               onClick={() => handlePageChange(page + 1)}
               className={styles.pageButton}
             >
-              Next
+              {Strings.NEXT}
             </button>
           </div>
         </>
@@ -144,14 +216,22 @@ const UsersList: React.FC = () => {
       {banPrompt && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <h2>Ban User: {banPrompt.username}</h2>
-            <label htmlFor="banReason">Reason for Ban:</label>
+            <h2>
+              {Strings.BAN_USER_PROMPT}
+              {banPrompt.username}
+            </h2>
+            <label htmlFor="banReason">{Strings.REASON_FOR_BAN}</label>
             <textarea
               id="banReason"
               value={banReason}
-              onChange={(e) => setBanReason(e.target.value)}
+              onChange={(e) =>
+                localDispatch({
+                  type: "SET_BAN_REASON",
+                  payload: e.target.value,
+                })
+              }
               className={styles.banReasonInput}
-              placeholder="Enter ban reason (e.g., Violation of community guidelines)"
+              placeholder={Strings.BAN_REASON_PLACEHOLDER}
             />
             <div className={styles.modalActions}>
               <button
@@ -161,10 +241,10 @@ const UsersList: React.FC = () => {
                   !banReason.trim() || banStatus[banPrompt.userId] === "loading"
                 }
               >
-                Confirm
+                {Strings.CONFIRM}
               </button>
               <button onClick={handleBanCancel} className={styles.cancelButton}>
-                Cancel
+                {Strings.CANCEL}
               </button>
             </div>
           </div>

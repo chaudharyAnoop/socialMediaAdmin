@@ -8,9 +8,11 @@ import axios from "axios";
 import token from "./tokens";
 import type { AdminPostsState, Post } from "../Interfaces/adminPost";
 
+import { Status } from "../constants/enums";
+
 const initialState: AdminPostsState = {
   posts: [],
-  status: "idle",
+  status: Status.Idle,
   error: null,
   page: 1,
   limit: 10,
@@ -55,7 +57,7 @@ const adminPostsSlice = createSlice({
   reducers: {
     resetPosts: (state) => {
       state.posts = [];
-      state.status = "idle";
+      state.status = Status.Idle;
       state.error = null;
       state.page = 1;
       state.total = 0;
@@ -67,19 +69,19 @@ const adminPostsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllPosts.pending, (state) => {
-        state.status = "loading";
+        state.status = Status.Loading;
         state.error = null;
       })
       .addCase(
         fetchAllPosts.fulfilled,
         (state, action: PayloadAction<Post[]>) => {
-          state.status = "succeeded";
+          state.status = Status.Succeeded;
           state.posts = action.payload || [];
           state.total = action.payload.length;
         }
       )
       .addCase(fetchAllPosts.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = Status.Failed;
         state.error = action.payload || "Failed to fetch posts";
       });
   },

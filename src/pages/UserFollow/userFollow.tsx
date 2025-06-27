@@ -8,13 +8,25 @@ import {
   fetchFollowing,
 } from "../../redux/userFollowSlice";
 
+import {
+  selectFollowers,
+  selectFollowing,
+  selectUserFollowLoading,
+  selectUserFollowError,
+} from "../../redux/selectors/userFollowSelector";
+
 import UserChart from "../charts/UserChart";
 import styles from "./userFollow.module.css";
 
 const UserFollow: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { followers, following, loading, error } = useSelector(
-    (state: RootState) => state.follow
+    (state: RootState) => ({
+      followers: selectFollowers(state),
+      following: selectFollowing(state),
+      loading: selectUserFollowLoading(state),
+      error: selectUserFollowError(state),
+    })
   );
   const [userId, setUserId] = useState<string>("684803c50574c4ee41ed21a8");
   const [token, setToken] = useState<string>("");
@@ -26,14 +38,14 @@ const UserFollow: React.FC = () => {
   }, []);
 
   const handleFetchFollowers = () => {
-    if (userId && token) {
-      dispatch(fetchFollowers({ userId, token }));
+    if (userId) {
+      dispatch(fetchFollowers({ userId }));
     }
   };
 
   const handleFetchFollowing = () => {
-    if (userId && token) {
-      dispatch(fetchFollowing({ userId, token }));
+    if (userId) {
+      dispatch(fetchFollowing({ userId }));
     }
   };
 
@@ -57,14 +69,14 @@ const UserFollow: React.FC = () => {
       <div className={styles.buttonGroup}>
         <button
           onClick={handleFetchFollowers}
-          disabled={loading || !userId || !token}
+          disabled={loading || !userId}
           className={styles.button}
         >
           Get Followers
         </button>
         <button
           onClick={handleFetchFollowing}
-          disabled={loading || !userId || !token}
+          disabled={loading || !userId}
           className={styles.button}
         >
           Get Following

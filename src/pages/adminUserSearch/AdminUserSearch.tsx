@@ -4,15 +4,23 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../redux/store";
 import { findUserByEmail, resetUserSearch } from "../../redux/userSearchSlice";
 
+import {
+  selectUserSearchUser,
+  selectUserSearchStatus,
+  selectUserSearchError,
+} from "../../redux/selectors/userSearchSelector";
+
 import UserChart from "../charts/UserChart";
 import styles from "./AdminUserSearch.module.css";
 
 const AdminUserSearch: React.FC = () => {
   const [email, setEmail] = useState("");
   const dispatch = useDispatch<AppDispatch>();
-  const { user, status, error } = useSelector(
-    (state: RootState) => state.userSearch
-  );
+  const { user, status, error } = useSelector((state: RootState) => ({
+    user: selectUserSearchUser(state),
+    status: selectUserSearchStatus(state),
+    error: selectUserSearchError(state),
+  }));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
